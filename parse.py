@@ -12,7 +12,9 @@ content_weather = soup_weather.text
 weather_lst = [i for i in content_weather.split('погода')][1].split('Подробнее')[0]
 weather2_lst = []
 for i in weather_lst.split():
-    if i == i.capitalize() and i.isalpha():
+    if weather_lst.split().index(i) == 0:
+        weather2_lst.append(i.replace('°C', ' град'))
+    elif i == i.capitalize() and i.isalpha():
         i = '\n' + i
         weather2_lst.append(i)
     else:
