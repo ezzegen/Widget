@@ -1,23 +1,36 @@
 from requests import get
 from bs4 import BeautifulSoup
 
-response_time = get('https://calendaronline.ru/den-segodnya/')
-soup_time = BeautifulSoup(response_time.text, 'html.parser')
-content_time = soup_time.text
-today = [i for i in content_time.split('\n') if i.find('года') != -1][2]
 
-response_weather = get('https://world-weather.ru/pogoda/russia/samara/')
-soup_weather = BeautifulSoup(response_weather.text, 'html.parser')
-content_weather = soup_weather.text
-weather_lst = [i for i in content_weather.split('погода')][1].split('Подробнее')[0]
-weather2_lst = []
-for i in weather_lst.split():
-    if weather_lst.split().index(i) == 0:
-        weather2_lst.append(i.replace('°C', ' град'))
-    elif i == i.capitalize() and i.isalpha():
-        i = '\n' + i
-        weather2_lst.append(i)
-    else:
-        weather2_lst.append(i)
+def date(url_date):
+    r_date = get(url_date)
+    s_date = BeautifulSoup(r_date.text, 'html.parser')
+    find_date = s_date.find_all('p', class_="daymonthnow")
+    clear_date = [c.text for c in find_date]
+    return clear_date[0]
 
-weather = ' '.join(weather2_lst)
+
+today = date('https://calendaronline.ru/den-segodnya/')
+
+
+def weather_td(url_w):
+    r_weather = get(url_w)
+    s_weather = BeautifulSoup(r_weather.text, 'html.parser')
+    find_weather = s_weather.find_all('span', class_='dw-into')
+    clear_weather = [c.text for c in find_weather][0].split('погода')[1].split('Подробнее')[0]
+    change_weather = clear_weather.replace('°C', 'град')
+    weather_lst = []
+    for i in change_weather.split():
+        if i == i.capitalize() and i.isalpha():
+            i = '\n' + i
+            weather_lst.append(i)
+        else:
+            weather_lst.append(i)
+    return ' '.join(weather_lst)
+
+
+weather = weather_td('https://world-weather.ru/pogoda/russia/samara/')
+
+if __name__ == '__main__':
+    print(date('https://calendaronline.ru/den-segodnya/'))
+    print(weather_td('https://world-weather.ru/pogoda/russia/samara/'))

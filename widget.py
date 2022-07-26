@@ -11,11 +11,12 @@ canvas = Canvas(root, width=600,
                 height=250)
 img = Image.open('sea.jpg').resize((600, 250), Image.ANTIALIAS)
 
-font = ImageFont.truetype('beer_money.ttf', 21)
+font = ImageFont.truetype('beer_money.ttf', 19)
 drawer = ImageDraw.Draw(img)
 drawer.text((10, 10), f'{today}\n\n{weather}', font=font, fill='white')
 photo = ImageTk.PhotoImage(img)
 canvas.create_image(1, 1, image=photo, anchor='nw')
 canvas.pack()
+
 
 root.mainloop()
