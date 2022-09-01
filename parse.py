@@ -1,5 +1,6 @@
 from requests import get
 from bs4 import BeautifulSoup
+from PIL import Image
 
 
 def date(url_date):
@@ -30,6 +31,17 @@ def weather_td(url_w):
 
 
 weather = weather_td('https://world-weather.ru/pogoda/russia/samara/')
+
+
+def gifs(f):
+    if f.find('облачно') != -1 or f.find('Облачно') != -1:
+        return Image.open('icons8-частичная-облачность.gif').resize((100, 100), Image.ANTIALIAS)
+    elif f.find('Ясно') != -1:
+        return Image.open('icons8-лето.gif').resize((100, 100), Image.ANTIALIAS)
+
+
+gif = gifs(weather)
+
 
 if __name__ == '__main__':
     print(date('https://calendaronline.ru/den-segodnya/'))
